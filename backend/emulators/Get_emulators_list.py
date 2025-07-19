@@ -6,7 +6,19 @@ import json
 class Get_emulators_list:
     def __init__(self, MuMu_path=r'L:\MuMuPlayer-12.0'):
         self.MuMu_path = MuMu_path
-        self.shell_path = os.path.join(self.MuMu_path, 'shell')
+
+        shell_dir = os.path.join(self.MuMu_path, "shell")
+        # MuMu模拟器5
+        nx_main_dir = os.path.join(self.MuMu_path, "nx_main")
+
+        if os.path.exists(shell_dir) and os.path.isdir(shell_dir):
+            self.shell_path = shell_dir
+        elif os.path.exists(nx_main_dir) and os.path.isdir(nx_main_dir):
+            self.shell_path = nx_main_dir
+        else:
+            print(f"无法找到MuMu模拟器的shell文件夹: {shell_dir} or {nx_main_dir}")
+            raise FileNotFoundError(f"无法找到MuMu模拟器的shell文件夹: {shell_dir} or {nx_main_dir}")
+
         self.mumu_manager = os.path.join(self.shell_path, 'MuMuManager.exe')
 
     def get_mumu_list(self):
@@ -18,6 +30,11 @@ class Get_emulators_list:
             # 设置Qt插件路径环境变量，确保子进程能找到必要的Qt插件
             env = os.environ.copy()
             qt_plugin_path = os.path.join(self.MuMu_path, 'shell', 'plugins')
+
+            # MuMu模拟器5
+            if not os.path.exists(qt_plugin_path):
+                qt_plugin_path = os.path.join(self.MuMu_path, 'nx_main', 'plugins')
+            
             if 'QT_PLUGIN_PATH' not in env:
                 env['QT_PLUGIN_PATH'] = qt_plugin_path
             else:

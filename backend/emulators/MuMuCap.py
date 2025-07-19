@@ -46,20 +46,21 @@ class MuMuCap:
             display_id (int, optional): 显示窗口ID，默认为0
             fps (int, optional): 截图最大帧率，默认为15
         """
-        # DLL文件路径
-        self.MUMU_API_DLL_PATH = r"shell\sdk\external_renderer_ipc.dll"
+        
         self.display_id = display_id
         self.instance_index = instance_index
         self.emulator_install_path = emulator_install_path
         self.fps = fps
         self.last_capture_time = 0  # 上次截图时间
         
-        # 构建完整的DLL路径
-        self.dll_path = os.path.join(self.emulator_install_path, self.MUMU_API_DLL_PATH)
+        # DLL文件路径
+        self.dll_path = os.path.join(self.emulator_install_path, "shell/sdk/external_renderer_ipc.dll")
+        if not os.path.exists(self.dll_path):
+            self.dll_path = os.path.join(self.emulator_install_path, "nx_main/sdk/external_renderer_ipc.dll")
         if not os.path.exists(self.dll_path):
             print(f"无法找到DLL文件: {self.dll_path}")
             # raise FileNotFoundError(f"无法找到DLL文件: {self.dll_path}")
-            
+
         # 初始化DLL接口
         self._init_dll()
         

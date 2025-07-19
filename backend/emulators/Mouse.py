@@ -3,6 +3,7 @@ import subprocess
 import time
 from typing import List, Tuple
 from abc import ABC, abstractmethod
+import os
 
 
 class Touch(ABC):
@@ -152,7 +153,11 @@ class MouseController(Touch):
         self.display_id = display_id
         self.instance_index = instance_index
         self.emulator_install_path = emulator_install_path
-        self.dll_path = self.emulator_install_path + "/shell/sdk/external_renderer_ipc.dll"
+        self.dll_path = os.path.join(self.emulator_install_path, "shell/sdk/external_renderer_ipc.dll")
+        if not os.path.exists(self.dll_path):
+            self.dll_path = os.path.join(self.emulator_install_path, "nx_main/sdk/external_renderer_ipc.dll")
+        if not os.path.exists(self.dll_path):
+            print(f"无法找到DLL文件: {self.dll_path}")
 
         self.width: int = 0
         self.height: int = 0
@@ -166,6 +171,8 @@ class MouseController(Touch):
         self.mumupath = mumupath
         self.serial = serial
         self.adb_path = mumupath + r'/shell/adb.exe'
+        if not os.path.exists(self.adb_path):
+            self.adb_path = mumupath + r'/nx_main/adb.exe'
         self.maatouch_path = mumupath + r'/bin/maatouch'
         self.remote_path = "/data/local/tmp/maatouch"
         

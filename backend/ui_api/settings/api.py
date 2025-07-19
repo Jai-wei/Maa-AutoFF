@@ -102,7 +102,9 @@ class SettingsAPI:
                     # 如果需要验证shell文件夹
                     if validate_shell:
                         shell_dir = os.path.join(selected_dir, "shell")
-                        has_shell = os.path.exists(shell_dir) and os.path.isdir(shell_dir)
+                        # MuMu模拟器5
+                        nx_main_dir = os.path.join(selected_dir, "nx_main")
+                        has_shell = os.path.exists(shell_dir) and os.path.isdir(shell_dir) or os.path.exists(nx_main_dir) and os.path.isdir(nx_main_dir)
                         return {
                             "success": True,
                             "data": selected_dir,
